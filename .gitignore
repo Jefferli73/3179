@@ -1,0 +1,3 @@
+.venv/
+data/vehicles_postcode_year_make.csv
+data/vehicles_postcode_make_model.csv
