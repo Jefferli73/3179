@@ -1,0 +1,38 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "The nostalgia matrix",
+    "subtitle": "Which eras of real car Hot Wheels chose to model, and when",
+    "anchor": "start"
+  },
+  "width": 400,
+  "height": 300,
+  "data": {
+    "url": "data/hot_wheels_castings.csv",
+    "format": {"parse": {"debut_year": "number"}}
+  },
+  "transform": [
+    {"calculate": "floor(datum.debut_year / 10) * 10 + 's'", "as": "release_decade"}
+  ],
+  "mark": {"type": "rect", "tooltip": true},
+  "encoding": {
+    "x": {
+      "field": "release_decade",
+      "type": "ordinal",
+      "title": "Decade the model was released",
+      "axis": {"labelAngle": 0}
+    },
+    "y": {
+      "field": "real_car_decade",
+      "type": "ordinal",
+      "title": "Decade of the real car",
+      "sort": "descending"
+    },
+    "color": {
+      "aggregate": "count",
+      "type": "quantitative",
+      "title": "Castings",
+      "scale": {"scheme": "blues"}
+    }
+  }
+}
