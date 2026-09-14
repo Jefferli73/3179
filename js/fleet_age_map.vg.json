@@ -1,0 +1,55 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "How old the fleet is",
+    "subtitle": "Average age of passenger vehicles by postcode, January 2025",
+    "anchor": "start"
+  },
+  "width": 600,
+  "height": 500,
+  "projection": {
+    "type": "conicEqualArea",
+    "rotate": [-132, 0, 0],
+    "center": [0, -27],
+    "parallels": [-18, -36]
+  },
+  "data": {
+    "url": "data/postcode.topojson",
+    "format": {"type": "topojson", "feature": "POA_2021_AUST_GDA2020"}
+  },
+  "transform": [
+    {
+      "lookup": "properties.POA_CODE21",
+      "from": {
+        "data": {
+          "url": "data/postcode_mean_age.csv",
+          "format": {"parse": {"registered_postcode": "string"}}
+        },
+        "key": "registered_postcode",
+        "fields": ["mean_age", "total_vehicles"]
+      }
+    }
+  ],
+  "mark": {"type": "geoshape", "stroke": null},
+  "encoding": {
+    "color": {
+      "condition": {
+        "test": "datum.mean_age != null",
+        "field": "mean_age",
+        "type": "quantitative",
+        "title": "Mean age (years)",
+        "scale": {
+          "type": "threshold",
+          "domain": [11.3, 12.6, 13.7, 15.2],
+          "range": ["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"]
+        }
+      },
+      "value": "#e0e0e0"
+    },
+    "tooltip": [
+      {"field": "properties.POA_CODE21", "type": "nominal", "title": "Postcode"},
+      {"field": "mean_age", "type": "quantitative", "title": "Mean age", "format": ".1f"},
+      {"field": "total_vehicles", "type": "quantitative", "title": "Vehicles", "format": ","}
+    ]
+  }
+}

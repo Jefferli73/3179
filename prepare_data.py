@@ -29,6 +29,7 @@ df = df[df["year_of_manufacture"].between(1900, REF_YEAR)]
 
 df["age"] = REF_YEAR - df["year_of_manufacture"]
 df["age_weighted"] = df["age"] * df["no_vehicles"]
+df["registered_postcode"] = df["registered_postcode"].astype(str).str.zfill(4)
 
 # --- chart 4: mean vehicle age by postcode ---
 pc = df.groupby("registered_postcode").agg(
