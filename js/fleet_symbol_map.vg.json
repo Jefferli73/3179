@@ -1,0 +1,52 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Where the vehicles are registered",
+    "subtitle": "Passenger vehicles by registered postcode, January 2025",
+    "anchor": "start"
+  },
+  "width": 600,
+  "height": 500,
+  "projection": {
+    "type": "conicEqualArea",
+    "rotate": [-132, 0, 0],
+    "center": [0, -27],
+    "parallels": [-18, -36]
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/postcode.topojson",
+        "format": {"type": "topojson", "feature": "POA_2021_AUST_GDA2020"}
+      },
+      "mark": {"type": "geoshape", "fill": "#f2f2f2", "stroke": "#ffffff", "strokeWidth": 0.3}
+    },
+    {
+      "data": {"url": "data/postcode_symbols.csv"},
+      "mark": {
+        "type": "circle",
+        "fill": "#2b7a6f",
+        "fillOpacity": 0.45,
+        "stroke": "#12433c",
+        "strokeWidth": 0.4
+      },
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "size": {
+          "field": "total_vehicles",
+          "type": "quantitative",
+          "title": "Registered vehicles",
+          "scale": {"domain": [0, 91555], "range": [0, 800]},
+          "legend": {"values": [5000, 25000, 75000], "labelExpr": "format(datum.value, ',')"}
+        },
+        "order": {"field": "total_vehicles", "sort": "descending"},
+        "tooltip": [
+          {"field": "registered_postcode", "type": "nominal", "title": "Postcode"},
+          {"field": "total_vehicles", "type": "quantitative", "title": "Vehicles", "format": ","},
+          {"field": "mean_age", "type": "quantitative", "title": "Mean age", "format": ".1f"}
+        ]
+      }
+    }
+  ]
+}

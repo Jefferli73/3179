@@ -41,6 +41,17 @@ pc = pc[pc["total_vehicles"] >= 100]        # suppress tiny, noisy postcodes
 pc[["registered_postcode", "mean_age", "total_vehicles"]] \
     .to_csv("data/postcode_mean_age.csv", index=False)
 
+# --- chart 5: proportional symbol map ---------------------------------
+cent = pd.read_csv("data/postcode_centroids.csv", dtype={"POA_CODE21": str})
+cent["POA_CODE21"] = cent["POA_CODE21"].str.zfill(4)
+cent = cent.rename(columns={"POA_CODE21": "registered_postcode"})
+
+sym = pc[["registered_postcode", "mean_age", "total_vehicles"]].merge(
+    cent, on="registered_postcode", how="inner")
+
+print(f"chart 5: matched {len(sym)} of {len(pc)} postcodes")
+sym.round({"lon": 4, "lat": 4}).to_csv("data/postcode_symbols.csv", index=False)
+
 # --- fallback: same measure by state ---
 st = df.groupby("state_abb").agg(
     total_vehicles=("no_vehicles", "sum"),
