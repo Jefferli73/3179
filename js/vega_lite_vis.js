@@ -6,3 +6,5 @@ var vg_3 = "js/fleet_symbol_map.vg.json";
 vegaEmbed("#fleet_symbol_map", vg_3).catch(console.error);
 var vg_4 = "js/ev_hex_map.vg.json";
 vegaEmbed("#ev_hex_map", vg_4).catch(console.error);
+var vg_5 = "js/designer_timeline.vg.json";
+vegaEmbed("#designer_timeline", vg_5).catch(console.error);

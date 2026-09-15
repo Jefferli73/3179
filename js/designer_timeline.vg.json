@@ -1,0 +1,50 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Designer careers on a timeline",
+    "subtitle": "First to last debut year, designers with 10 or more castings",
+    "anchor": "start"
+  },
+  "width": 600,
+  "height": {"step": 24},
+  "data": {
+    "url": "data/hot_wheels_castings.csv",
+    "format": {"parse": {"debut_year": "number"}}
+  },
+  "transform": [
+    {"filter": "datum.designer != 'Unknown'"},
+    {"calculate": "trim(split(datum.designer, ';')[0])", "as": "lead"},
+    {"joinaggregate": [{"op": "count", "as": "n"}], "groupby": ["lead"]},
+    {"filter": "datum.n >= 10"}
+  ],
+  "mark": {"type": "bar", "cornerRadius": 2},
+  "encoding": {
+    "y": {
+      "field": "lead",
+      "type": "nominal",
+      "title": null,
+      "sort": {"op": "min", "field": "debut_year", "order": "ascending"}
+    },
+    "x": {
+      "aggregate": "min",
+      "field": "debut_year",
+      "type": "quantitative",
+      "title": "Debut year",
+      "scale": {"domain": [1974, 2027]},
+      "axis": {"format": "d"}
+    },
+    "x2": {"aggregate": "max", "field": "debut_year"},
+    "color": {
+      "aggregate": "count",
+      "type": "quantitative",
+      "title": "Castings",
+      "scale": {"scheme": "teals"}
+    },
+    "tooltip": [
+      {"field": "lead", "type": "nominal", "title": "Designer"},
+      {"aggregate": "count", "type": "quantitative", "title": "Castings"},
+      {"aggregate": "min", "field": "debut_year", "type": "quantitative", "title": "First", "format": "d"},
+      {"aggregate": "max", "field": "debut_year", "type": "quantitative", "title": "Last", "format": "d"}
+    ]
+  }
+}
