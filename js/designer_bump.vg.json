@@ -1,0 +1,43 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Who designed the most, decade by decade",
+    "subtitle": "Rank by castings debuting in each decade, top five",
+    "anchor": "start"
+  },
+  "width": 460,
+  "height": 260,
+  "data": {
+    "url": "data/hot_wheels_castings.csv",
+    "format": {"parse": {"debut_year": "number"}}
+  },
+  "transform": [
+    {"filter": "datum.designer != 'Unknown'"},
+    {"filter": "datum.debut_year >= 1990"},
+    {"calculate": "trim(split(datum.designer, ';')[0])", "as": "lead"},
+    {"calculate": "floor(datum.debut_year / 10) * 10 + 's'", "as": "decade"},
+    {"aggregate": [{"op": "count", "as": "castings"}], "groupby": ["decade", "lead"]},
+    {"window": [{"op": "row_number", "as": "rank"}],
+     "sort": [{"field": "castings", "order": "descending"},
+              {"field": "lead", "order": "ascending"}],
+     "groupby": ["decade"]},
+    {"filter": "datum.rank <= 5"}
+  ],
+  "encoding": {
+    "x": {"field": "decade", "type": "ordinal", "title": null, "axis": {"labelAngle": 0}},
+    "y": {"field": "rank", "type": "ordinal", "title": "Rank by castings",
+          "scale": {"domain": [1, 2, 3, 4, 5]}},
+    "color": {"field": "lead", "type": "nominal", "title": "Designer",
+              "scale": {"scheme": "tableau10"}},
+    "tooltip": [
+      {"field": "lead", "type": "nominal", "title": "Designer"},
+      {"field": "decade", "type": "ordinal", "title": "Decade"},
+      {"field": "rank", "type": "ordinal", "title": "Rank"},
+      {"field": "castings", "type": "quantitative", "title": "Castings"}
+    ]
+  },
+  "layer": [
+    {"mark": {"type": "line", "strokeWidth": 2.5}},
+    {"mark": {"type": "point", "filled": true, "size": 90}}
+  ]
+}
