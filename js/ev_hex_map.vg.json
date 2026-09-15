@@ -1,0 +1,39 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Where the electric cars are",
+    "subtitle": "Electric and hybrid share of the local passenger fleet, January 2025",
+    "anchor": "start"
+  },
+  "width": 600,
+  "height": 500,
+  "projection": {
+    "type": "conicEqualArea",
+    "rotate": [-132, 0, 0],
+    "center": [0, -27],
+    "parallels": [-18, -36]
+  },
+  "data": {
+    "url": "data/ev_hex.geojson",
+    "format": {"type": "json", "property": "features"}
+  },
+  "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.4},
+  "encoding": {
+    "color": {
+      "field": "properties.share",
+      "type": "quantitative",
+      "title": "Electric or hybrid (%)",
+      "scale": {
+        "type": "threshold",
+        "domain": [1.9, 2.5, 3.1, 4.0],
+        "range": ["#edf8fb", "#b2e2e2", "#66c2a4", "#2ca25f", "#006d2c"]
+      },
+      "legend": {"format": ".1f"}
+    },
+    "tooltip": [
+      {"field": "properties.share", "type": "quantitative", "title": "Electric or hybrid %", "format": ".2f"},
+      {"field": "properties.total", "type": "quantitative", "title": "Vehicles", "format": ","},
+      {"field": "properties.postcodes", "type": "quantitative", "title": "Postcodes in bin"}
+    ]
+  }
+}

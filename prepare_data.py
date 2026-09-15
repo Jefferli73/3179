@@ -52,6 +52,60 @@ sym = pc[["registered_postcode", "mean_age", "total_vehicles"]].merge(
 print(f"chart 5: matched {len(sym)} of {len(pc)} postcodes")
 sym.round({"lon": 4, "lat": 4}).to_csv("data/postcode_symbols.csv", index=False)
 
+# --- chart 6: bin map of electrified share -----------------------------
+import json
+mp = pd.read_csv("data/vehicles_postcode_motive.csv",
+                 usecols=["vehicle_type", "registered_postcode",
+                          "motive_power", "no_vehicles"],
+                 dtype={"registered_postcode": str})
+mp = mp[mp["vehicle_type"] == "Passenger vehicles"].copy()
+mp["no_vehicles"] = pd.to_numeric(mp["no_vehicles"], errors="coerce").fillna(0).astype(int)
+mp["registered_postcode"] = mp["registered_postcode"].str.zfill(4)
+
+is_elec = mp["motive_power"].str.contains("electric|hybrid", case=False, na=False)
+
+tot = mp.groupby("registered_postcode")["no_vehicles"].sum().rename("total")
+ele = mp[is_elec].groupby("registered_postcode")["no_vehicles"].sum().rename("electrified")
+pcm = pd.concat([tot, ele], axis=1).fillna(0).reset_index()
+
+cent6 = pd.read_csv("data/postcode_centroids.csv", dtype={"POA_CODE21": str})
+cent6["POA_CODE21"] = cent6["POA_CODE21"].str.zfill(4)
+pcm = pcm.merge(cent6.rename(columns={"POA_CODE21": "registered_postcode"}),
+                on="registered_postcode", how="inner")
+print(f"chart 6: {len(pcm)} of {len(tot)} postcodes matched to a centroid")
+
+CELL = 1.0        # degrees per bin -> ~41 bins across Australia
+
+pcm["gx"] = (pcm["lon"] // CELL).astype(int)
+pcm["gy"] = (pcm["lat"] // CELL).astype(int)
+
+hx = (pcm.groupby(["gx", "gy"])
+         .agg(total=("total", "sum"),
+              electrified=("electrified", "sum"),
+              postcodes=("registered_postcode", "size"))
+         .reset_index())
+
+hx = hx[hx["total"] >= 500]
+hx["share"] = (hx["electrified"] / hx["total"] * 100).round(2)
+
+feats = []
+for row in hx.itertuples():
+    x0, y0 = row.gx * CELL, row.gy * CELL
+    x1, y1 = x0 + CELL, y0 + CELL
+    feats.append({
+        "type": "Feature",
+        "properties": {"share": row.share, "total": int(row.total),
+                       "postcodes": int(row.postcodes)},
+        "geometry": {"type": "Polygon",
+             "coordinates": [[[x0, y0], [x0, y1], [x1, y1], [x1, y0], [x0, y0]]]}
+    })
+
+with open("data/ev_hex.geojson", "w") as f:
+    json.dump({"type": "FeatureCollection", "features": feats}, f)
+
+print("bins:", len(feats), "| share range:", hx.share.min(), "-", hx.share.max())
+print(hx.share.quantile([.2, .4, .6, .8]).round(1))
+
 # --- fallback: same measure by state ---
 st = df.groupby("state_abb").agg(
     total_vehicles=("no_vehicles", "sum"),

@@ -4,3 +4,5 @@ var vg_2 = "js/fleet_age_map.vg.json";
 vegaEmbed("#fleet_age_map", vg_2).catch(console.error);
 var vg_3 = "js/fleet_symbol_map.vg.json";
 vegaEmbed("#fleet_symbol_map", vg_3).catch(console.error);
+var vg_4 = "js/ev_hex_map.vg.json";
+vegaEmbed("#ev_hex_map", vg_4).catch(console.error);
