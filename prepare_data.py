@@ -106,6 +106,47 @@ with open("data/ev_hex.geojson", "w") as f:
 print("bins:", len(feats), "| share range:", hx.share.min(), "-", hx.share.max())
 print(hx.share.quantile([.2, .4, .6, .8]).round(1))
 
+# --- charts 9-11: shelf vs driveway by decade ---------------------------
+df["build_decade"] = (df["year_of_manufacture"] // 10 * 10).astype(int).astype(str) + "s"
+dec = df.groupby("build_decade")["no_vehicles"].sum().reset_index()
+dec.columns = ["build_decade", "vehicles"]
+dec.to_csv("data/fleet_by_decade.csv", index=False)
+cast = pd.read_csv("data/hot_wheels_castings.csv")
+DECADES = [f"{d}s" for d in range(1920, 2030, 10)]
+
+shelf = (cast["real_car_decade"].value_counts()
+         .reindex(DECADES, fill_value=0).rename("castings"))
+road = (dec.set_index("build_decade")["vehicles"]
+        .reindex(DECADES, fill_value=0).rename("vehicles"))
+
+comp = pd.concat([shelf, road], axis=1).reset_index(names="decade")
+comp["shelf_share"] = (comp["castings"] / comp["castings"].sum() * 100).round(2)
+comp["road_share"] = (comp["vehicles"] / comp["vehicles"].sum() * 100).round(2)
+comp["diff"] = (comp["shelf_share"] - comp["road_share"]).round(2)
+comp.to_csv("data/decade_compare.csv", index=False)
+
+# --- chart 10: paired waffle, 1 square = 1 in 100 ---
+def to_hundred(vals):
+    tot = sum(vals)
+    exact = [v / tot * 100 for v in vals]
+    base = [int(e) for e in exact]
+    for i in sorted(range(len(vals)), key=lambda i: -(exact[i] - base[i]))[:100 - sum(base)]:
+        base[i] += 1
+    return base
+
+waffle = []
+for side, col in (("Shelf", "castings"), ("Road", "vehicles")):
+    i = 0
+    for name, k in zip(comp["decade"], to_hundred(comp[col].tolist())):
+        for _ in range(k):
+            waffle.append({"side": side, "decade": name,
+                           "row": i // 10, "col": i % 10})
+            i += 1
+pd.DataFrame(waffle).to_csv("data/decade_waffle.csv", index=False)
+
+print(comp[["decade", "shelf_share", "road_share", "diff"]].to_string(index=False))
+print("waffle rows:", len(waffle))
+
 # --- fallback: same measure by state ---
 st = df.groupby("state_abb").agg(
     total_vehicles=("no_vehicles", "sum"),
@@ -114,12 +155,6 @@ st = df.groupby("state_abb").agg(
 st["mean_age"] = (st["age_sum"] / st["total_vehicles"]).round(2)
 st[["state_abb", "mean_age", "total_vehicles"]] \
     .to_csv("data/state_mean_age.csv", index=False)
-
-# --- charts 9-11: fleet by build decade ---
-df["build_decade"] = (df["year_of_manufacture"] // 10 * 10).astype(int).astype(str) + "s"
-dec = df.groupby("build_decade")["no_vehicles"].sum().reset_index()
-dec.columns = ["build_decade", "vehicles"]
-dec.to_csv("data/fleet_by_decade.csv", index=False)
 
 print("postcodes:", len(pc), "| states:", len(st), "| decades:", len(dec))
 print("mean age range:", pc.mean_age.min(), "-", pc.mean_age.max())

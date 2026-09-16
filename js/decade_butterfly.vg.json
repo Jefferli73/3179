@@ -1,0 +1,44 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Which decades each collection favours",
+    "subtitle": "Share of Hot Wheels castings vs share of registered vehicles",
+    "anchor": "start"
+  },
+  "data": {"url": "data/decade_compare.csv"},
+  "spacing": 6,
+  "hconcat": [
+    {
+      "width": 250,
+      "height": {"step": 22},
+      "mark": {"type": "bar", "color": "#c26b4f"},
+      "encoding": {
+        "y": {"field": "decade", "type": "ordinal", "title": null,
+              "sort": ["1920s","1930s","1940s","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"]},
+        "x": {"field": "shelf_share", "type": "quantitative", "title": "On the shelf (%)",
+              "scale": {"reverse": true, "domain": [0, 50]}},
+        "tooltip": [
+          {"field": "decade", "type": "ordinal"},
+          {"field": "castings", "type": "quantitative", "title": "Castings"},
+          {"field": "shelf_share", "type": "quantitative", "title": "Shelf %", "format": ".2f"}
+        ]
+      }
+    },
+    {
+      "width": 250,
+      "height": {"step": 22},
+      "mark": {"type": "bar", "color": "#2b7a6f"},
+      "encoding": {
+        "y": {"field": "decade", "type": "ordinal", "axis": null,
+              "sort": ["1920s","1930s","1940s","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"]},
+        "x": {"field": "road_share", "type": "quantitative", "title": "On the road (%)",
+              "scale": {"domain": [0, 50]}},
+        "tooltip": [
+          {"field": "decade", "type": "ordinal"},
+          {"field": "vehicles", "type": "quantitative", "title": "Vehicles", "format": ","},
+          {"field": "road_share", "type": "quantitative", "title": "Road %", "format": ".2f"}
+        ]
+      }
+    }
+  ]
+}

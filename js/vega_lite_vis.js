@@ -10,3 +10,5 @@ var vg_5 = "js/designer_timeline.vg.json";
 vegaEmbed("#designer_timeline", vg_5).catch(console.error);
 var vg_6 = "js/designer_bump.vg.json";
 vegaEmbed("#designer_bump", vg_6).catch(console.error);
+var vg_7 = "js/decade_butterfly.vg.json";
+vegaEmbed("#decade_butterfly", vg_7).catch(console.error);
