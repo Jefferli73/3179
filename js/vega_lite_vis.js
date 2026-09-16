@@ -14,3 +14,5 @@ var vg_7 = "js/decade_butterfly.vg.json";
 vegaEmbed("#decade_butterfly", vg_7).catch(console.error);
 var vg_8 = "js/decade_waffle.vg.json";
 vegaEmbed("#decade_waffle", vg_8).catch(console.error);
+var vg_9 = "js/decade_gap.vg.json";
+vegaEmbed("#decade_gap", vg_9).catch(console.error);

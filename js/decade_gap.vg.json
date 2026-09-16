@@ -1,0 +1,36 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "The biggest mismatches, by decade",
+    "subtitle": "Shelf share minus road share, in percentage points",
+    "anchor": "start"
+  },
+  "data": {
+    "url": "data/decade_compare.csv",
+    "format": {"parse": {"diff": "number", "shelf_share": "number", "road_share": "number"}}
+  },
+  "width": 420,
+  "height": {"step": 24},
+  "encoding": {
+    "y": {"field": "decade", "type": "ordinal", "title": null,
+          "sort": {"field": "diff", "op": "min", "order": "descending"}},
+    "x": {"field": "diff", "type": "quantitative",
+          "title": "\u2190 under-modelled          over-modelled \u2192",
+          "scale": {"domain": [-40, 30]}},
+    "color": {
+      "condition": {"test": "datum.diff > 0", "value": "#c26b4f"},
+      "value": "#2b7a6f"
+    },
+    "tooltip": [
+      {"field": "decade", "type": "ordinal"},
+      {"field": "shelf_share", "type": "quantitative", "title": "Shelf %", "format": ".2f"},
+      {"field": "road_share", "type": "quantitative", "title": "Road %", "format": ".2f"},
+      {"field": "diff", "type": "quantitative", "title": "Gap (pp)", "format": "+.2f"}
+    ]
+  },
+  "layer": [
+    {"mark": {"type": "rule", "strokeWidth": 2.5},
+     "encoding": {"x": {"datum": 0}, "x2": {"field": "diff"}}},
+    {"mark": {"type": "point", "filled": true, "size": 110}}
+  ]
+}
