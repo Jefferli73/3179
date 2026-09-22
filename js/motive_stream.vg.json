@@ -16,36 +16,57 @@
     {"filter": "datum.year_of_manufacture >= 1990 && datum.year_of_manufacture <= 2024"},
     {"calculate": "indexof(['Petrol','Diesel','Dual fuel','Other','Hybrid electric','Battery/Fuel-cell electric'], datum.motive_power)", "as": "band"}
   ],
-  "mark": {"type": "area", "interpolate": "monotone"},
-  "encoding": {
-    "x": {
-      "field": "year_of_manufacture",
-      "type": "quantitative",
-      "title": "Year of manufacture",
-      "axis": {"format": "d"},
-      "scale": {"domain": [1990, 2024], "nice": false}
-    },
-    "y": {
-      "aggregate": "sum",
-      "field": "no_vehicles",
-      "type": "quantitative",
-      "stack": "center",
-      "axis": null
-    },
-    "order": {"field": "band", "type": "quantitative"},
-    "color": {
-      "field": "motive_power",
-      "type": "nominal",
-      "title": "Motive power",
-      "scale": {
-        "domain": ["Petrol", "Diesel", "Dual fuel", "Other", "Hybrid electric", "Battery/Fuel-cell electric"],
-        "range": ["#9aa5ad", "#6b7480", "#c2b8a3", "#ddd8cf", "#2ca25f", "#006d2c"]
+  "layer": [
+    {
+      "mark": {"type": "area", "interpolate": "monotone"},
+      "encoding": {
+        "x": {
+          "field": "year_of_manufacture",
+          "type": "quantitative",
+          "title": "Year of manufacture",
+          "axis": {"format": "d"},
+          "scale": {"domain": [1990, 2024], "nice": false}
+        },
+        "y": {"aggregate": "sum", "field": "no_vehicles", "type": "quantitative", "stack": "center", "axis": null},
+        "order": {"field": "band", "type": "quantitative"},
+        "color": {
+          "field": "motive_power",
+          "type": "nominal",
+          "title": "Motive power",
+          "scale": {
+            "domain": ["Petrol", "Diesel", "Dual fuel", "Other", "Hybrid electric", "Battery/Fuel-cell electric"],
+            "range": ["#9aa5ad", "#6b7480", "#c2b8a3", "#ddd8cf", "#2ca25f", "#006d2c"]
+          }
+        },
+        "tooltip": [
+          {"field": "year_of_manufacture", "type": "quantitative", "title": "Built", "format": "d"},
+          {"field": "motive_power", "type": "nominal", "title": "Motive power"},
+          {"aggregate": "sum", "field": "no_vehicles", "type": "quantitative", "title": "Vehicles", "format": ","}
+        ]
       }
     },
-    "tooltip": [
-      {"field": "year_of_manufacture", "type": "quantitative", "title": "Built", "format": "d"},
-      {"field": "motive_power", "type": "nominal", "title": "Motive power"},
-      {"aggregate": "sum", "field": "no_vehicles", "type": "quantitative", "title": "Vehicles", "format": ","}
-    ]
-  }
+    {
+      "data": {"values": [{"year_of_manufacture": 2015}]},
+      "mark": {"type": "rule", "color": "#6b7480", "strokeDash": [4, 3], "strokeWidth": 1},
+      "encoding": {"x": {"field": "year_of_manufacture", "type": "quantitative", "axis": null}}
+    },
+    {
+      "data": {"values": [{"year_of_manufacture": 2015, "label": "2015 · 1.7% electric or hybrid"}]},
+      "mark": {"type": "text", "align": "right", "dx": -5, "baseline": "top", "fontSize": 10, "color": "#4a5560"},
+      "encoding": {
+        "x": {"field": "year_of_manufacture", "type": "quantitative", "axis": null},
+        "y": {"value": 4},
+        "text": {"field": "label"}
+      }
+    },
+    {
+      "data": {"values": [{"year_of_manufacture": 2024, "label": "2024 · 35%"}]},
+      "mark": {"type": "text", "align": "right", "dx": -3, "baseline": "top", "fontSize": 12, "fontWeight": "bold", "color": "#006d2c"},
+      "encoding": {
+        "x": {"field": "year_of_manufacture", "type": "quantitative", "axis": null},
+        "y": {"value": 4},
+        "text": {"field": "label"}
+      }
+    }
+  ]
 }
