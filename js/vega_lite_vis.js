@@ -18,3 +18,5 @@ var vg_9 = "js/decade_gap.vg.json";
 vegaEmbed("#decade_gap", vg_9).catch(console.error);
 var vg_10 = "js/motive_stream.vg.json";
 vegaEmbed("#motive_stream", vg_10).catch(console.error);
+var vg_11 = "js/fleet_by_make.vg.json";
+vegaEmbed("#fleet_by_make", vg_11).catch(console.error);

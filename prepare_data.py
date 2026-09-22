@@ -147,6 +147,26 @@ pd.DataFrame(waffle).to_csv("data/decade_waffle.csv", index=False)
 print(comp[["decade", "shelf_share", "road_share", "diff"]].to_string(index=False))
 print("waffle rows:", len(waffle))
 
+# --- chart 7: the fleet by make ----------------------------------------
+ORIGIN = {
+    "TOYOTA": "Japan", "MAZDA": "Japan", "MITSUBISHI": "Japan", "NISSAN": "Japan",
+    "SUBARU": "Japan", "HONDA": "Japan", "SUZUKI": "Japan",
+    "HYUNDAI": "South Korea", "KIA": "South Korea",
+    "VOLKSWAGEN": "Germany", "MERCEDES-BENZ": "Germany", "BMW": "Germany", "AUDI": "Germany",
+    "HOLDEN": "Australia", "FORD": "United States",
+}
+
+mk = (df.groupby("make", as_index=False)["no_vehicles"].sum()
+        .rename(columns={"no_vehicles": "vehicles"})
+        .sort_values("vehicles", ascending=False))
+mk["share"] = (mk["vehicles"] / mk["vehicles"].sum() * 100).round(2)
+
+top = mk.head(15).copy()
+top["origin"] = top["make"].map(ORIGIN)
+assert top["origin"].notna().all(), top.loc[top["origin"].isna(), "make"].tolist()
+top.to_csv("data/top_makes.csv", index=False)
+print("chart 7: top 15 makes = %.1f%% of the fleet" % top["share"].sum())
+
 # --- fallback: same measure by state ---
 st = df.groupby("state_abb").agg(
     total_vehicles=("no_vehicles", "sum"),

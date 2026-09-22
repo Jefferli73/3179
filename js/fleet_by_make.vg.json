@@ -1,0 +1,36 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "The Australian fleet, by make",
+    "subtitle": "Registered passenger vehicles, top 15 makes, January 2025",
+    "anchor": "start"
+  },
+  "width": 480,
+  "height": {"step": 22},
+  "data": {
+    "url": "data/top_makes.csv",
+    "format": {"parse": {"vehicles": "number", "share": "number"}}
+  },
+  "mark": {"type": "bar"},
+  "encoding": {
+    "y": {"field": "make", "type": "nominal", "title": null,
+          "sort": {"field": "vehicles", "op": "min", "order": "descending"}},
+    "x": {"field": "vehicles", "type": "quantitative",
+          "title": "Registered vehicles", "axis": {"format": "~s"}},
+    "color": {
+      "field": "origin",
+      "type": "nominal",
+      "title": "Brand origin",
+      "scale": {
+        "domain": ["Japan", "South Korea", "Germany", "United States", "Australia"],
+        "range": ["#2b7a6f", "#66c2a4", "#8f9aa5", "#5b6670", "#d9a441"]
+      }
+    },
+    "tooltip": [
+      {"field": "make", "type": "nominal", "title": "Make"},
+      {"field": "origin", "type": "nominal", "title": "Origin"},
+      {"field": "vehicles", "type": "quantitative", "title": "Vehicles", "format": ","},
+      {"field": "share", "type": "quantitative", "title": "Share of fleet", "format": ".2f"}
+    ]
+  }
+}
