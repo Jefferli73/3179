@@ -6,20 +6,77 @@
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    figure {
+      margin: 0 0 2.5rem;
+    }
+    .note {
+      max-width: 46em;
+      margin: 0.4rem 0 0;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: #b04a2f;
+    }
+  </style>
 </head>
 <body>
   <h1>The Shelf and the Driveway</h1>
-  <div id="nostalgia_matrix"></div>
-  <div id="fleet_age_map"></div>
-  <div id="fleet_symbol_map"></div>
-  <div id="ev_hex_map"></div>
-  <div id="designer_timeline"></div>
-  <div id="designer_bump"></div>
-  <div id="decade_butterfly"></div>
-  <div id="decade_waffle"></div>
-  <div id="decade_gap"></div>
-  <div id="motive_stream"></div>
-  <div id="fleet_by_make"></div>
+
+  <figure>
+    <div id="nostalgia_matrix"></div>
+    <p class="note">The gap between a real car and its model widened from about 16 years in the 1970s to 35 by the 2000s — and has sat there ever since.</p>
+  </figure>
+
+  <figure>
+    <div id="fleet_age_map"></div>
+    <p class="note">Cars in Australia's quietest postcodes average 15.1 years old against 11.3 in the busiest — a four-year gap between the bush and the cities.</p>
+  </figure>
+
+  <figure>
+    <div id="fleet_symbol_map"></div>
+    <p class="note">A hundred postcodes out of 2,459 — four per cent of them — hold nearly a quarter of every car in the country.</p>
+  </figure>
+
+  <figure>
+    <div id="ev_hex_map"></div>
+    <p class="note">Electric and hybrid cars make up 6.3% of the fleet in the busiest postcodes and 2.7% in the quietest. In central Sydney it is one car in three.</p>
+  </figure>
+
+  <figure>
+    <div id="designer_timeline"></div>
+    <p class="note">Larry Wood's 37-year run accounts for 135 castings, a fifth of the entire catalogue. Every other designer here started after 1996.</p>
+  </figure>
+
+  <figure>
+    <div id="designer_bump"></div>
+    <p class="note">Wood held first place for two decades and then disappeared after 2012. Vetuskey and Jones are now dead level at 45 castings each this decade.</p>
+  </figure>
+
+  <figure>
+    <div id="decade_butterfly"></div>
+    <p class="note">The two collections barely meet. The shelf's weight sits in the 1950s to 1970s; the road's sits entirely after 2000.</p>
+  </figure>
+
+  <figure>
+    <div id="decade_waffle"></div>
+    <p class="note">Half the toy grid — the 1930s through the 1960s, plus the 1980s — doesn't place a single square on the road grid.</p>
+  </figure>
+
+  <figure>
+    <div id="decade_gap"></div>
+    <p class="note">The 1960s are over-modelled by 23 points, the 2010s under-modelled by 37. The toy aisle is a museum of cars almost nobody here still drives.</p>
+  </figure>
+
+  <figure>
+    <div id="motive_stream"></div>
+    <p class="note">Hybrids and EVs were a rounding error until 2015, at 1.7% of new builds. They were 35% of everything built in 2024.</p>
+  </figure>
+
+  <figure>
+    <div id="fleet_by_make"></div>
+    <p class="note">Seven of the fifteen biggest makes are Japanese. Holden, the only Australian marque left on the list, hasn't been built here since 2017.</p>
+  </figure>
+
   <script src="js/vega_lite_vis.js"></script>
 </body>
 </html>
