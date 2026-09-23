@@ -2,81 +2,378 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Shelf and the Driveway</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
   <style>
-    figure {
-      margin: 0 0 2.5rem;
+    :root {
+      --ink:    #1d2327;
+      --muted:  #5a6570;
+      --faint:  #8b949c;
+      --rule:   #e4e0d8;
+      --bg:     #faf7f2;
+      --panel:  #ffffff;
+      --shelf:  #c26b4f;
+      --road:   #2b7a6f;
+      --note:   #b04a2f;
+      --serif:  "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
+      --sans:   -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    /* ---------- masthead ---------- */
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.6rem;
+    }
+
+    .standfirst {
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 2.6vw, 1.45rem);
+      line-height: 1.35;
+      color: var(--shelf);
+      margin: 0 0 1.4rem;
+    }
+
+    .byline {
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin: 0 0 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .intro {
+      max-width: 46em;
+      font-size: 1.02rem;
+      color: var(--muted);
+      margin: 0 0 3.5rem;
+    }
+    .intro strong { color: var(--ink); font-weight: 600; }
+
+    /* ---------- hook tiles ---------- */
+
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin: 0 0 4rem;
+    }
+
+    .tile {
+      background: var(--panel);
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      padding: 1.1rem 1.2rem 0.9rem;
+    }
+
+    .tile .figure {
+      font-family: var(--serif);
+      font-size: 2rem;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.45rem;
+    }
+    .tile.shelf .figure { color: var(--shelf); }
+    .tile.road  .figure { color: var(--road); }
+
+    .tile .label { font-size: 0.85rem; color: var(--muted); line-height: 1.35; }
+
+    .tile .src {
+      display: block;
+      margin-top: 0.6rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    /* ---------- sections ---------- */
+
+    section { margin: 0 0 4rem; }
+
+    section > h2 {
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin: 0 0 0.3rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--ink);
+      display: flex;
+      align-items: baseline;
+      gap: 0.7rem;
+    }
+
+    section > h2 .n {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: var(--faint);
+    }
+
+    section > .lede {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin: 0 0 2rem;
+    }
+
+    /* ---------- charts ---------- */
+
+    figure { margin: 0 0 2.75rem; }
+
+    figure > div { overflow-x: auto; }
+
     .note {
       max-width: 46em;
-      margin: 0.4rem 0 0;
-      font-size: 0.85rem;
-      line-height: 1.45;
-      color: #b04a2f;
+      margin: 0.55rem 0 0;
+      padding-left: 0.8rem;
+      border-left: 2px solid var(--note);
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: var(--note);
+    }
+
+    /* ---------- footer ---------- */
+
+    footer {
+      border-top: 2px solid var(--ink);
+      padding-top: 1.6rem;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    footer h2 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin: 0 0 1rem;
+    }
+
+    footer h3 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 1.6rem 0 0.35rem;
+    }
+
+    footer p, footer ul { margin: 0 0 0.6rem; }
+    footer ul { padding-left: 1.1rem; }
+    footer li { margin-bottom: 0.25rem; }
+    footer a { color: var(--road); }
+
+    .todo {
+      background: #fff6e5;
+      border: 1px solid #e8c88a;
+      padding: 0.2rem 0.4rem;
+      border-radius: 2px;
+      color: #8a6416;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <h1>The Shelf and the Driveway</h1>
+<div class="page">
 
-  <figure>
-    <div id="nostalgia_matrix"></div>
-    <p class="note">The gap between a real car and its model widened from about 16 years in the 1970s to 35 by the 2000s — and has sat there ever since.</p>
-  </figure>
+  <header>
+    <h1>The Shelf and the Driveway</h1>
+    <p class="standfirst">The toy aisle is stuck in 1969. Australian driveways are not.</p>
+    <p class="byline">
+      Ze Xiang Li &middot; <span class="todo">35042176</span> &middot;
+      FIT3179 Data Visualisation 2 &middot; September 2026
+    </p>
 
-  <figure>
-    <div id="fleet_age_map"></div>
-    <p class="note">Cars in Australia's quietest postcodes average 15.1 years old against 11.3 in the busiest — a four-year gap between the bush and the cities.</p>
-  </figure>
+    <p class="intro">
+      A toy catalogue records which cars a culture romanticised. The road records
+      which ones it actually bought. This page puts the two side by side on a shared
+      decade axis: <strong>676 Hot Wheels castings</strong> against
+      <strong>22.3 million vehicles</strong> registered in Australia in January 2025.
+      They turn out to have almost nothing in common. Written for a general Australian
+      audience &mdash; no knowledge of die-cast collecting assumed.
+    </p>
+  </header>
 
-  <figure>
-    <div id="fleet_symbol_map"></div>
-    <p class="note">A hundred postcodes out of 2,459 — four per cent of them — hold nearly a quarter of every car in the country.</p>
-  </figure>
+  <div class="tiles">
+    <div class="tile shelf">
+      <div class="figure">676</div>
+      <div class="label">castings in this sample of the Hot Wheels catalogue, debuting 1975&ndash;2026</div>
+      <span class="src">Source A</span>
+    </div>
+    <div class="tile shelf">
+      <div class="figure">1960s</div>
+      <div class="label">the decade the toy aisle models most &mdash; 24% of every casting</div>
+      <span class="src">Source A</span>
+    </div>
+    <div class="tile road">
+      <div class="figure">22.3m</div>
+      <div class="label">vehicles registered in Australia, 31 January 2025</div>
+      <span class="src">Source B</span>
+    </div>
+    <div class="tile road">
+      <div class="figure">11.7<span style="font-size:1rem"> yrs</span></div>
+      <div class="label">average age of an Australian passenger vehicle</div>
+      <span class="src">Source B</span>
+    </div>
+  </div>
 
-  <figure>
-    <div id="ev_hex_map"></div>
-    <p class="note">Electric and hybrid cars make up 6.3% of the fleet in the busiest postcodes and 2.7% in the quietest. In central Sydney it is one car in three.</p>
-  </figure>
+  <section>
+    <h2><span class="n">1</span> The shelf</h2>
+    <p class="lede">What the catalogue chose to shrink &mdash; casting, debut year, designer, real-car decade.</p>
 
-  <figure>
-    <div id="designer_timeline"></div>
-    <p class="note">Larry Wood's 37-year run accounts for 135 castings, a fifth of the entire catalogue. Every other designer here started after 1996.</p>
-  </figure>
+    <figure>
+      <div id="nostalgia_matrix"></div>
+      <p class="note">The gap between a real car and its model widened from about 16 years in the 1970s to 35 by the 2000s &mdash; and has sat there ever since.</p>
+    </figure>
 
-  <figure>
-    <div id="designer_bump"></div>
-    <p class="note">Wood held first place for two decades and then disappeared after 2012. Vetuskey and Jones are now dead level at 45 castings each this decade.</p>
-  </figure>
+    <figure>
+      <div id="designer_timeline"></div>
+      <p class="note">Larry Wood's 37-year run accounts for 135 castings, a fifth of the entire catalogue. Every other designer here started after 1996.</p>
+    </figure>
 
-  <figure>
-    <div id="decade_butterfly"></div>
-    <p class="note">The two collections barely meet. The shelf's weight sits in the 1950s to 1970s; the road's sits entirely after 2000.</p>
-  </figure>
+    <figure>
+      <div id="designer_bump"></div>
+      <p class="note">Wood held first place for two decades and then disappeared after 2012. Vetuskey and Jones are now dead level at 45 castings each this decade.</p>
+    </figure>
+  </section>
 
-  <figure>
-    <div id="decade_waffle"></div>
-    <p class="note">Half the toy grid — the 1930s through the 1960s, plus the 1980s — doesn't place a single square on the road grid.</p>
-  </figure>
+  <section>
+    <h2><span class="n">2</span> The driveway</h2>
+    <p class="lede">What Australians actually registered &mdash; all three map idioms, drawn on an equal-area conic projection.</p>
 
-  <figure>
-    <div id="decade_gap"></div>
-    <p class="note">The 1960s are over-modelled by 23 points, the 2010s under-modelled by 37. The toy aisle is a museum of cars almost nobody here still drives.</p>
-  </figure>
+    <figure>
+      <div id="fleet_age_map"></div>
+      <p class="note">Cars in Australia's quietest postcodes average 15.1 years old against 11.3 in the busiest &mdash; a four-year gap between the bush and the cities.</p>
+    </figure>
 
-  <figure>
-    <div id="motive_stream"></div>
-    <p class="note">Hybrids and EVs were a rounding error until 2015, at 1.7% of new builds. They were 35% of everything built in 2024.</p>
-  </figure>
+    <figure>
+      <div id="fleet_symbol_map"></div>
+      <p class="note">A hundred postcodes out of 2,459 &mdash; four per cent of them &mdash; hold nearly a quarter of every car in the country.</p>
+    </figure>
 
-  <figure>
-    <div id="fleet_by_make"></div>
-    <p class="note">Seven of the fifteen biggest makes are Japanese. Holden, the only Australian marque left on the list, hasn't been built here since 2017.</p>
-  </figure>
+    <figure>
+      <div id="ev_hex_map"></div>
+      <p class="note">Electric and hybrid cars make up 6.3% of the fleet in the busiest postcodes and 2.7% in the quietest. In central Sydney it is one car in three.</p>
+    </figure>
+  </section>
 
-  <script src="js/vega_lite_vis.js"></script>
+  <section>
+    <h2><span class="n">3</span> The fleet in detail</h2>
+    <p class="lede">The road, broken down &mdash; make, motive power, year of manufacture.</p>
+
+    <figure>
+      <div id="fleet_by_make"></div>
+      <p class="note">Seven of the fifteen biggest makes are Japanese. Holden, the only Australian marque left on the list, hasn't been built here since 2017.</p>
+    </figure>
+
+    <figure>
+      <div id="motive_stream"></div>
+      <p class="note">Hybrids and EVs were a rounding error until 2015, at 1.7% of new builds. They were 35% of everything built in 2024.</p>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span> Shelf versus driveway</h2>
+    <p class="lede">The two collections compared on a shared decade axis, using both sources.</p>
+
+    <figure>
+      <div id="decade_butterfly"></div>
+      <p class="note">The two collections barely meet. The shelf's weight sits in the 1950s to 1970s; the road's sits entirely after 2000.</p>
+    </figure>
+
+    <figure>
+      <div id="decade_waffle"></div>
+      <p class="note">Half the toy grid &mdash; the 1930s through the 1960s, plus the 1980s &mdash; doesn't place a single square on the road grid.</p>
+    </figure>
+
+    <figure>
+      <div id="decade_gap"></div>
+      <p class="note">The 1960s are over-modelled by 23 points, the 2010s under-modelled by 37. The toy aisle is a museum of cars almost nobody here still drives.</p>
+    </figure>
+  </section>
+
+  <footer>
+    <h2>Sources and method</h2>
+
+    <h3>Source A &mdash; Hot Wheels Casting Database</h3>
+    <p>
+      Orange Track Diecast (<a href="https://orangetrackdiecast.com">orangetrackdiecast.com</a>).
+      Fields used: casting, debut year, designer, real-car decade. 676 rows.
+      <strong>Transparency note:</strong> this source is published as HTML tables on the web
+      page, not as a downloadable file. It was transcribed to CSV rather than downloaded.
+    </p>
+
+    <h3>Source B &mdash; Road Vehicles, Australia, January 2025</h3>
+    <p>
+      Bureau of Infrastructure and Transport Research Economics, via
+      <a href="https://www.data.gov.au/data/dataset/road-vehicles-australia-january-2025">data.gov.au</a>.
+      Licensed CC BY 3.0 Australia. Fields used: state/territory, registered postcode, make,
+      model, motive power, year of manufacture, vehicle count. Analysis is restricted to
+      passenger vehicles throughout.
+    </p>
+
+    <h3>Boundaries</h3>
+    <p>
+      Postcode (POA) 2021 boundaries from the Australian Bureau of Statistics, simplified and
+      converted to TopoJSON with mapshaper. All three maps use a conic equal-area projection
+      with standard parallels at 18&deg;S and 36&deg;S.
+    </p>
+
+    <h3>Derived fields and judgement calls</h3>
+    <ul>
+      <li><strong>Brand origin</strong> (chart 7) is assigned by hand for the top 15 makes. It is not a field in the BITRE data. Every other field on this page comes directly from a source.</li>
+      <li><strong>Collaborations</strong> (charts 2 and 3) are credited to the first-named designer. 11 of 676 castings list two designers.</li>
+      <li><strong>Averages are vehicle-weighted</strong> throughout &mdash; means of means would over-weight small rural postcodes, which are exactly the ones with the oldest fleets.</li>
+      <li><strong>Bin map cells</strong> (chart 6) are equal in degrees, not equal in area. The measure is a share, so no area standardising is required.</li>
+    </ul>
+
+    <h3>Limitations</h3>
+    <ul>
+      <li>The census date is 31 January 2025, so vehicles built late in 2024 were not yet registered. The stream graph's narrowing at its right edge is a collection artifact, not a market contraction. 2025 build years are excluded entirely.</li>
+      <li>11 non-residential postcodes (PO box and mail-centre codes, 0.06% of vehicles) have no ABS boundary and are excluded from the maps.</li>
+      <li>Bin map cells holding fewer than 500 vehicles are suppressed, which leaves gaps in remote Australia rather than showing noisy percentages.</li>
+      <li>Source A is a sample of the Hot Wheels catalogue, not the complete catalogue. Shelf shares describe this sample.</li>
+    </ul>
+
+    <h3>Acknowledgment</h3>
+    <p class="todo" style="display:block;padding:0.7rem 0.9rem;">
+      Claude (Anthropic) was used for source research, writing and debugging
+      the Vega-Lite specifications and the Python data-preparation script. 
+      Sketch Planning, Data selection, design decisions and verification of 
+      every figure are the author's own.
+    </p>
+  </footer>
+
+</div>
+<script src="js/vega_lite_vis.js"></script>
 </body>
 </html>
