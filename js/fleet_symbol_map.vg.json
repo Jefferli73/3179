@@ -2,7 +2,7 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
     "text": "Where the vehicles are registered",
-    "subtitle": "Passenger vehicles by registered postcode, January 2025",
+    "subtitle": "Passenger vehicles by registered postcode, January 2025 · drag the slider to thin the map",
     "anchor": "start"
   },
   "width": 600,
@@ -13,6 +13,19 @@
     "center": [0, -27],
     "parallels": [-18, -36]
   },
+  "params": [
+    {
+      "name": "min_vehicles",
+      "value": 0,
+      "bind": {
+        "input": "range",
+        "min": 0,
+        "max": 20000,
+        "step": 500,
+        "name": "Show postcodes with at least this many vehicles: "
+      }
+    }
+  ],
   "layer": [
     {
       "data": {
@@ -23,6 +36,7 @@
     },
     {
       "data": {"url": "data/postcode_symbols.csv"},
+      "transform": [{"filter": "datum.total_vehicles >= min_vehicles"}],
       "mark": {
         "type": "circle",
         "fill": "#2b7a6f",

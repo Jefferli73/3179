@@ -2,7 +2,7 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
     "text": "Who designed the most, decade by decade",
-    "subtitle": "Rank by castings debuting in each decade, top five",
+    "subtitle": "Rank by castings debuting in each decade, top five · click a designer in the legend",
     "anchor": "start"
   },
   "width": 460,
@@ -29,6 +29,10 @@
           "scale": {"domain": [1, 2, 3, 4, 5]}},
     "color": {"field": "lead", "type": "nominal", "title": "Designer",
               "scale": {"scheme": "tableau10"}},
+    "opacity": {
+      "condition": {"param": "designer_highlight", "value": 1},
+      "value": 0.12
+    },
     "tooltip": [
       {"field": "lead", "type": "nominal", "title": "Designer"},
       {"field": "decade", "type": "ordinal", "title": "Decade"},
@@ -37,7 +41,14 @@
     ]
   },
   "layer": [
-    {"mark": {"type": "line", "strokeWidth": 2.5}},
+    {
+      "params": [
+        {"name": "designer_highlight",
+         "select": {"type": "point", "fields": ["lead"]},
+         "bind": "legend"}
+      ],
+      "mark": {"type": "line", "strokeWidth": 2.5}
+    },
     {"mark": {"type": "point", "filled": true, "size": 90}}
   ]
 }
