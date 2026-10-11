@@ -14,9 +14,9 @@ const vegaConfig = {
     offset: 10
   },
   axis: {
-    labelFontSize: 11,
-    labelColor: "#4a5560",
-    titleFontSize: 11,
+    labelFontSize: 12,
+    labelColor: "#3f4850",
+    titleFontSize: 12,
     titleFontWeight: 500,
     titleColor: "#5a6570",
     domainColor: "#d5d8db",
@@ -25,9 +25,9 @@ const vegaConfig = {
     labelPadding: 4
   },
   legend: {
-    labelFontSize: 11,
-    labelColor: "#4a5560",
-    titleFontSize: 11,
+    labelFontSize: 12,
+    labelColor: "#3f4850",
+    titleFontSize: 12,
     titleFontWeight: 600,
     titleColor: "#1d2327",
     symbolStrokeWidth: 0

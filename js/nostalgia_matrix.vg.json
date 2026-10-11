@@ -9,18 +9,30 @@
   "height": 300,
   "data": {
     "url": "data/hot_wheels_castings.csv",
-    "format": {"parse": {"debut_year": "number"}}
+    "format": {
+      "parse": {
+        "debut_year": "number"
+      }
+    }
   },
   "transform": [
-    {"calculate": "floor(datum.debut_year / 10) * 10 + 's'", "as": "release_decade"}
+    {
+      "calculate": "floor(datum.debut_year / 10) * 10 + 's'",
+      "as": "release_decade"
+    }
   ],
-  "mark": {"type": "rect", "tooltip": true},
+  "mark": {
+    "type": "rect",
+    "tooltip": true
+  },
   "encoding": {
     "x": {
       "field": "release_decade",
       "type": "ordinal",
       "title": "Decade the model was released",
-      "axis": {"labelAngle": 0}
+      "axis": {
+        "labelAngle": 0
+      }
     },
     "y": {
       "field": "real_car_decade",
@@ -32,7 +44,15 @@
       "aggregate": "count",
       "type": "quantitative",
       "title": "Castings",
-      "scale": {"scheme": "blues"}
+      "scale": {
+        "range": [
+          "#fbf0e8",
+          "#f3d2bd",
+          "#e5a985",
+          "#d2805a",
+          "#b85c3c"
+        ]
+      }
     }
   }
 }

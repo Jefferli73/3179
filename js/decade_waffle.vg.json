@@ -2,26 +2,61 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
     "text": "100 toys vs 100 real cars",
-    "subtitle": "One square is one in a hundred, coloured by the decade of the car",
+    "subtitle": [
+      "One square is one in a hundred, coloured by the decade of the car.",
+      "A decade with squares on the left but none on the right is modelled but not driven."
+    ],
     "anchor": "start"
   },
-  "data": {"url": "data/decade_waffle.csv"},
-  "mark": {"type": "square", "size": 150, "stroke": "#ffffff", "strokeWidth": 1},
+  "data": {
+    "url": "data/decade_waffle.csv"
+  },
+  "mark": {
+    "type": "square",
+    "size": 150,
+    "stroke": "#ffffff",
+    "strokeWidth": 1
+  },
   "width": 200,
   "height": 200,
   "encoding": {
-    "column": {"field": "side", "type": "nominal", "title": null, "sort": ["Shelf", "Road"]},
-    "x": {"field": "col", "type": "ordinal", "axis": null},
-    "y": {"field": "row", "type": "ordinal", "axis": null, "sort": "descending"},
+    "column": {
+      "field": "side",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "Shelf",
+        "Road"
+      ]
+    },
+    "x": {
+      "field": "col",
+      "type": "ordinal",
+      "axis": null
+    },
+    "y": {
+      "field": "row",
+      "type": "ordinal",
+      "axis": null,
+      "sort": "descending"
+    },
     "color": {
       "field": "decade",
       "type": "ordinal",
       "title": "Decade of the car",
-      "scale": {"scheme": "viridis"}
+      "scale": {
+        "scheme": "viridis"
+      }
     },
     "tooltip": [
-      {"field": "side", "type": "nominal"},
-      {"field": "decade", "type": "ordinal"}
+      {
+        "field": "side",
+        "type": "nominal"
+      },
+      {
+        "field": "decade",
+        "type": "ordinal"
+      }
     ]
   }
 }
